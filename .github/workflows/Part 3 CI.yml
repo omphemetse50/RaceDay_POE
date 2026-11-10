@@ -1,0 +1,59 @@
+name: Part 3 CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          set -e
+          missing=0
+          for p in README.md docker-compose.yml \
+                   RaceDay/RaceDay.sln RaceDay/RaceDay.csproj RaceDay/Program.cs RaceDay/Dockerfile \
+                   RaceDay/Controllers RaceDay/Models RaceDay/DTOs RaceDay/Database RaceDay/Services \
+                   RaceDay.Tests/RaceDay.Tests.csproj \
+                   RaceDay.Web/RaceDay.Web.csproj RaceDay.Web/Program.cs RaceDay.Web/Dockerfile \
+                   RaceDay.Web/Controllers RaceDay.Web/Views RaceDay.Web/Services; do
+            if [ -e "$p" ]; then echo "OK      $p"; else echo "MISSING $p"; missing=1; fi
+          done
+          exit $missing
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # RaceDay.sln now includes RaceDay (API), RaceDay.Tests, and RaceDay.Web,
+      # so restoring/building/testing the solution covers the MVC project too --
+      # satisfying "update the GitHub Actions workflow to also build the MVC project".
+      - name: Restore
+        run: dotnet restore RaceDay/RaceDay.sln
+
+      - name: Build
+        run: dotnet build RaceDay/RaceDay.sln --configuration Release --no-restore
+
+      - name: Test
+        run: >
+          dotnet test RaceDay/RaceDay.sln --configuration Release --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/*.trx
+
+      - name: Validate Dockerfiles build
+        run: |
+          docker build -f RaceDay/Dockerfile -t raceday-api:ci .
+          docker build -f RaceDay.Web/Dockerfile -t raceday-web:ci .
