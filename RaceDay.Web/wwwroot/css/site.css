@@ -1,0 +1,125 @@
+:root {
+    --raceday-orange: #FF6B35;
+    --raceday-navy: #0B2545;
+    --raceday-blue: #1565C0;
+    --raceday-green: #2E7D32;
+    --raceday-amber: #F9A825;
+    --raceday-red: #C62828;
+    --raceday-bg: #F7F8FA;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--raceday-bg);
+    color: #212529;
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    color: var(--raceday-navy);
+    letter-spacing: -0.02em;
+}
+
+.raceday-navbar {
+    background: linear-gradient(90deg, var(--raceday-navy) 0%, var(--raceday-blue) 100%);
+}
+
+.raceday-navbar .navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+}
+
+.btn-primary {
+    background-color: var(--raceday-orange);
+    border-color: var(--raceday-orange);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #e6592b;
+    border-color: #e6592b;
+}
+
+.btn-outline-primary {
+    color: var(--raceday-orange);
+    border-color: var(--raceday-orange);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--raceday-orange);
+    border-color: var(--raceday-orange);
+}
+
+a {
+    color: var(--raceday-blue);
+}
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 10px rgba(11, 37, 69, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(11, 37, 69, 0.14);
+}
+
+.event-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    background-color: #e9ecef;
+}
+
+.badge-event-type {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.35em 0.7em;
+}
+
+.badge-run { background-color: var(--raceday-orange); }
+.badge-walk { background-color: var(--raceday-blue); }
+.badge-cycle { background-color: var(--raceday-green); }
+
+/* Enrolment / result status colour coding -- required by the Part 3 brief */
+.status-badge {
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.status-confirmed { background-color: #d4edda; color: var(--raceday-green); }
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-cancelled { background-color: #f8d7da; color: var(--raceday-red); }
+.status-finished { background-color: #d1ecf1; color: #0c5460; }
+.status-default { background-color: #e2e3e5; color: #41464b; }
+
+.profile-picture {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--raceday-orange);
+}
+
+.dashboard-stat {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: 0 2px 10px rgba(11, 37, 69, 0.08);
+}
+
+.dashboard-stat .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--raceday-orange);
+}
+
+.footer {
+    font-size: 0.85rem;
+}
