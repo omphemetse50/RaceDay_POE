@@ -1,0 +1,62 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Sign up";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 mt-4">
+            <h2 class="mb-3">Create your RaceDay account</h2>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <form asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label"></label>
+                    <input asp-for="FullName" class="form-control" autofocus />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <div class="form-text">At least 8 characters.</div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label d-block">I am signing up as a:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Role" id="roleParticipant" value="Participant" checked />
+                        <label class="form-check-label" for="roleParticipant">🏃 Participant — I want to enter events</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Role" id="roleOrganiser" value="Organiser" />
+                        <label class="form-check-label" for="roleOrganiser">🏁 Organiser — I want to create and manage events</label>
+                    </div>
+                    <span asp-validation-for="Role" class="text-danger d-block"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Create account</button>
+            </form>
+
+            <p class="mt-3 mb-0 text-center">
+                Already have an account? <a asp-controller="Account" asp-action="Login">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,68 @@
+@model OrganiserDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Welcome back, @User.Identity!.Name 👋</h1>
+
+<div class="row g-3 my-3">
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <div class="stat-value">@Model.MyEvents.Count</div>
+            <div class="text-muted">Events created</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <div class="stat-value">@Model.TotalEnrolments</div>
+            <div class="text-muted">Total enrolments</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <div class="stat-value">@(Model.NextEventDate?.ToString("dd MMM") ?? "—")</div>
+            <div class="text-muted">Next event date</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h3 class="mb-0">My Events</h3>
+    <a asp-controller="Events" asp-action="Create" class="btn btn-primary">+ Create Event</a>
+</div>
+
+@if (!Model.MyEvents.Any())
+{
+    <div class="alert alert-info">You haven't created any events yet.</div>
+}
+else
+{
+    <table class="table table-hover bg-white rounded">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.MyEvents.OrderBy(e => e.Event.EventDate))
+    {
+                <tr>
+                    <td>@item.Event.Name</td>
+                    <td>@item.Event.EventDate.ToString("dd MM yyyy")</td>
+                    <td>@item.Event.Location</td>
+                    <td>@item.Event.EventType</td>
+                    <td>@item.EnrolmentCount</td> <!-- Added Enrolment Count -->
+                    <td>
+                        <a href="/Events/Details/@item.Event.EventId" class="btn btn-sm btn-outline-primary">View</a>
+                        <a href="/Events/Edit/@item.Event.EventId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a href="/Events/Enrolments/@item.Event.EventId" class="btn btn-sm btn-outline-secondary">Enrolments</a>
+                    </td>
+                </tr>
+    }
+        </tbody>
+    </table>
+}

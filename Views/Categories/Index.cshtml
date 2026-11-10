@@ -1,0 +1,66 @@
+@model CategoriesPageViewModel
+@{
+    ViewData["Title"] = $"Categories — {Model.Event.Name}";
+}
+
+<h1>Categories for @Model.Event.Name</h1>
+
+<div class="row mt-4">
+    <div class="col-md-7">
+        <h4>Existing categories</h4>
+        @if (!Model.Categories.Any())
+        {
+            <p class="text-muted">No categories yet — add one using the form.</p>
+        }
+        else
+        {
+            <table class="table table-hover bg-white rounded">
+                <thead>
+                    <tr><th>Name</th><th>Distance</th><th>Max</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <tr>
+                            <td>@cat.Name</td>
+                            <td>@(cat.DistanceKm.HasValue ? $"{cat.DistanceKm} km" : "Age-based")</td>
+                            <td>@cat.MaxParticipants</td>
+                            <td>
+                                <form asp-controller="Categories" asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete this category?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="categoryId" value="@cat.CategoryId" />
+                                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="col-md-5">
+        <h4>Add a category</h4>
+        <form asp-controller="Categories" asp-action="Create" method="post" class="card p-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="NewCategory.EventId" />
+
+            <div class="mb-3">
+                <label asp-for="NewCategory.Name" class="form-label"></label>
+                <input asp-for="NewCategory.Name" class="form-control" placeholder="e.g. 10km or Under 20" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="NewCategory.DistanceKm" class="form-label"></label>
+                <input asp-for="NewCategory.DistanceKm" type="number" step="0.01" class="form-control" placeholder="Leave blank for age-based" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="NewCategory.MaxParticipants" class="form-label"></label>
+                <input asp-for="NewCategory.MaxParticipants" type="number" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+</div>
+
+<a asp-controller="Events" asp-action="Details" asp-route-id="@Model.Event.EventId" class="btn btn-outline-secondary mt-4">Back to Event</a>

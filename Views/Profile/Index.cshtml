@@ -1,0 +1,50 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>My Profile</h1>
+
+<div class="row mt-4">
+    <div class="col-md-3 text-center">
+        @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+        {
+            <img src="@Model.ProfilePictureUrl" class="profile-picture mb-2" alt="Profile picture" />
+        }
+        else
+        {
+            <div class="profile-picture mb-2 d-flex align-items-center justify-content-center bg-light mx-auto">👤</div>
+        }
+        <div class="badge bg-secondary">@Model.Role</div>
+        <p class="text-muted small mt-2">Member since @Model.CreatedAt.ToString("MMM yyyy")</p>
+    </div>
+
+    <div class="col-md-9">
+        <form asp-controller="Profile" asp-action="Index" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ProfilePicture" class="form-label"></label>
+                <input asp-for="ProfilePicture" type="file" accept=".jpg,.jpeg,.png,.gif" class="form-control" />
+                <div class="form-text">JPG, PNG, or GIF. Uploaded to Azure Blob Storage via the RaceDay API.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

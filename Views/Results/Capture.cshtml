@@ -1,0 +1,42 @@
+@model ResultFormViewModel
+@{
+    ViewData["Title"] = "Capture Result";
+    var eventId = (int)ViewBag.EventId;
+}
+
+<h1>Capture finish result</h1>
+
+<form asp-controller="Results" asp-action="Capture" method="post" class="mt-3 col-md-6">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="EnrolmentId" />
+    <input type="hidden" name="eventId" value="@eventId" />
+
+    <div class="mb-3">
+        <label asp-for="FinishTime" class="form-label"></label>
+        <input asp-for="FinishTime" class="form-control" placeholder="00:24:12" />
+        <span asp-validation-for="FinishTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Position" class="form-label"></label>
+        <input asp-for="Position" type="number" class="form-control" />
+        <span asp-validation-for="Position" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option value="Finished">Finished</option>
+            <option value="DNF">Did Not Finish</option>
+            <option value="DSQ">Disqualified</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Result</button>
+    <a asp-controller="Events" asp-action="Enrolments" asp-route-id="@eventId" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

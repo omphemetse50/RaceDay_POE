@@ -1,0 +1,57 @@
+@model List<ApiEnrolment>
+@{
+    var ev = (ApiEvent)ViewBag.Event;
+    ViewData["Title"] = $"Enrolments — {ev.Name}";
+}
+
+<h1>Enrolments for @ev.Name</h1>
+<p class="text-muted">@Model.Count participant(s) enrolled across all categories.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No participants have enrolled yet.</div>
+}
+else
+{
+    <table class="table table-hover bg-white rounded">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Category</th>
+                <th>Enrolled</th>
+                <th>Status</th>
+                <th>Result</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var en in Model)
+            {
+                <tr>
+                    <td>@en.ParticipantName</td>
+                    <td>@en.CategoryName</td>
+                    <td>@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                    <td><span class="status-badge @StatusBadgeHelper.CssClass(en.Status)">@en.Status</span></td>
+                    <td>
+                        @if (en.HasResult)
+                        {
+                            <span class="status-badge status-finished">Captured</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not yet</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!en.HasResult)
+                        {
+                            <a asp-controller="Results" asp-action="Capture" asp-route-enrolmentId="@en.EnrolmentId" asp-route-eventId="@ev.EventId" class="btn btn-sm btn-primary">Capture Result</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-outline-secondary mt-3">Back to Event</a>

@@ -1,0 +1,27 @@
+@model EventFormViewModel
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<h1>Edit event</h1>
+
+<form asp-controller="Events" asp-action="Edit" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data" class="mt-3">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @if (!string.IsNullOrEmpty(Model.ExistingBannerUrl))
+    {
+        <div class="mb-3">
+            <label class="form-label d-block">Current banner</label>
+            <img src="@Model.ExistingBannerUrl" alt="Current banner" style="max-height:160px;border-radius:0.5rem;" />
+        </div>
+    }
+
+    <partial name="_EventFormFields" />
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-outline-secondary mt-3">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,47 @@
+@model MyResultsViewModel
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h1>My Race History</h1>
+
+@if (!Model.Results.Any())
+{
+    <div class="alert alert-info">No results yet — results appear here once an Organiser captures them after an event.</div>
+}
+else
+{
+    <table class="table table-hover bg-white rounded">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Results)
+            {
+                <tr>
+                    <td>@r.EventName</td>
+                    <td>@r.EventDate.ToString("dd MM yyyy")</td>
+                    <td>@r.CategoryName</td>
+                    <td>@(r.FinishTime ?? "—")</td>
+                    <td>@(r.Position.HasValue ? (r.TotalFinishers > 0 ? $"{Ordinal(r.Position.Value)} out of {r.TotalFinishers} finishers" : Ordinal(r.Position.Value)) : "—")</td>
+                    <td><span class="status-badge @StatusBadgeHelper.CssClass(r.Status)">@r.Status</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+    private static string Ordinal(int n)
+    {
+        if (n % 100 is >= 11 and <= 13) return $"{n}th";
+        return (n % 10) switch { 1 => $"{n}st", 2 => $"{n}nd", 3 => $"{n}rd", _ => $"{n}th" };
+    }
+}
